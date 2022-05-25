@@ -1,37 +1,74 @@
 import Header from "../components/Header";
-import {Avatar, Box, Card, Chip, Container, Grid, Stack} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Card,
+    Chip,
+    Container, FormControl,
+    Grid, InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    Stack,
+    Typography
+} from "@mui/material";
 import React from "react";
 import axios from "../config/axiosConfig";
+import ErrorMessage from "../components/ErrorMessage";
+import AuctionCard from "../components/AuctionCard";
 
-const computeClosingTime = (endDateString: string) => {
-    let now = new Date();
-    let endDate = new Date(endDateString);
+function FilterCard(props: any) {
 
-    let elapsed = endDate.getTime() - now.getTime();
-    let days = Math.floor(elapsed / (1000 * 60 * 60 * 24))
-
-    if (days === 0) {
-        return "Closing today";
-    } else if (days === 1) {
-        return "Closing tomorrow"
-    } else {
-        return "Closing in " + days + " days";
-    }
-
-
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+            },
+        },
+    };
 
 
+    const handleChange = ((event: any) => {
+        props.setSelected(event.target.value);
+    })
+
+    return (
+        <Card>
+
+            <Typography variant="h6">Filter</Typography>
+            <FormControl sx={{m: 1, width: 300}}>
+                <InputLabel id="category-label">Category</InputLabel>
+                <Select labelId="category-label" value={props.selected} input={<OutlinedInput label="Category"/>} onChange={handleChange} multiple MenuProps={MenuProps}>
+                    {props.categoryList.map((item: number) => {
+                        return(
+                            <MenuItem key={item} value={item}>
+                                {props.categories[item]}
+                            </MenuItem>
+                    )})}
+                </Select>
+            </FormControl>
+
+        </Card>
+    )
 
 
 }
-
 
 const Auctions = () => {
 
     const [auctions, setAuctions] = React.useState([]);
     const [categories, setCategories] = React.useState<{[key:number]: string}>({})
+    const [categoryList, setCategoryList] = React.useState<number[]>([]);
+
     const [errorFlag, setErrorFlag] = React.useState(false)
     const [errorMessage, setErrorMessage] = React.useState("")
+
+    const [searchText, setSearchText] = React.useState<string>("");
+
+    const [selectedCategories, setSelectedCategories] = React.useState([]);
 
     React.useEffect(() => {
         getAuctions();
@@ -39,7 +76,7 @@ const Auctions = () => {
     }, [])
 
     const getAuctions = () => {
-        axios.get('auctions')
+        axios.get(`auctions?q=${searchText}`)
             .then((response) => {
                 setErrorFlag(false)
                 setErrorMessage("")
@@ -56,11 +93,14 @@ const Auctions = () => {
                 setErrorFlag(false)
                 setErrorMessage("")
                 let categoryDict: {[key:number]: string} = {};
+                let categoryList: number[] = [];
                 for (const category of response.data) {
+                    categoryList.push(parseInt(category.categoryId));
                     categoryDict[category.categoryId as keyof Object] = category.name
                 }
 
                 setCategories(categoryDict);
+                setCategoryList(categoryList);
             }, (error) => {
                 setErrorFlag(true)
                 setErrorMessage(error.toString())
@@ -70,43 +110,11 @@ const Auctions = () => {
 
     const list_of_auctions = () => {
         return auctions.map((item: Auction) => {
-            const sellerName = item.sellerFirstName + " " + item.sellerLastName;
             const cardHeight = "15rem";
             return (
-                <Grid item xs={12} xl={6}>
-                    <Card key={item.auctionId} sx={{height: cardHeight, maxWidth: "600px"}}>
-                        <Grid container spacing={0}>
-                            <Grid item xs={6} sx={{justifyContent: "center"}}>
-                                <h2>{item.title}</h2>
-                                <Box sx={{width: "90%", border: 1, borderRadius: "1rem", margin: "5px"}}>
-                                    <Stack direction="row" sx={{justifyContent: "center"}}>
-                                        <p>{sellerName}</p>
-                                        <Avatar src={"http://localhost:4941/api/v1/users/" + item.sellerId + "/image"} sx={{margin: "5px"}}>
-                                            {item.sellerFirstName[0] + item.sellerLastName[0]}
-                                        </Avatar>
-                                    </Stack>
-                                </Box>
-
-
-
-                                <p>{computeClosingTime(item.endDate)}</p>
-                                <Chip label={categories[item.categoryId]} sx={{margin: "1rem"}}/>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <img src={"http://localhost:4941/api/v1/auctions/" + item.auctionId + "/image"} style={{
-                                    objectFit: "cover", width: cardHeight, height: cardHeight, float: "right"
-                                }}/>
-                            </Grid>
-
-                        </Grid>
-                    </Card>
+                <Grid item xs={12} xl={6} key={item.auctionId}>
+                    <AuctionCard item={item} cardHeight={cardHeight} categories={categories}/>
                 </Grid>
-
-
-
-
-
-
             )
         }
 
@@ -116,9 +124,13 @@ const Auctions = () => {
 
     return (
         <div>
-            <Header/>
+            <Header searchText={searchText} setSearchText={setSearchText} searchCallback={getAuctions}/>
             <Container sx={{justifyContent: "center"}}>
-                <Grid container spacing={2} sx={{margin: "auto"}}>
+                <ErrorMessage flag={errorFlag} message={errorMessage}/>
+
+                <FilterCard selected={selectedCategories} setSelected={setSelectedCategories} categoryList={categoryList} categories={categories}/>
+
+                <Grid container spacing={2} sx={{marginTop: 2}}>
                     {list_of_auctions()}
                 </Grid>
 

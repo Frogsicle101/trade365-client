@@ -12,4 +12,17 @@ const useStore = create<UserState>((set) => ({
         return {user: user}
     }),
 }))
-export const useUserStore = useStore;
+
+interface SearchState {
+    searchText: string | null;
+    setSearchText: (text: string) => void;
+}
+
+const useSearchStore = create<SearchState>((set) => ({
+    searchText: "",
+    setSearchText: (text: string) => set(() => {
+        return {searchText: text}
+    }),
+}))
+
+export {useSearchStore};

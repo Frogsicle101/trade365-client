@@ -1,5 +1,7 @@
 import {alpha, AppBar, Avatar, InputBase, styled, TextField, Toolbar, Typography} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
+import {useNavigate} from "react-router-dom";
+import {useSearchStore} from "../store";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -41,9 +43,13 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const Header = (props: any) => {
+const Header = () => {
+
+    const searchText = useSearchStore(state => state.searchText);
+    const setSearchText = useSearchStore(state => state.setSearchText);
 
     let imageSource = "";
+    const navigate = useNavigate();
 
     return (
         <div>
@@ -60,11 +66,14 @@ const Header = (props: any) => {
                         </SearchIconWrapper>
                         <StyledInputBase
                             placeholder="Search…"
-                            value={props.searchText}
+                            value={searchText}
                             onChange={(event) => {
-                                props.setSearchText(event.target.value);
-                                props.searchCallback();
-
+                                setSearchText(event.target.value);
+                            }}
+                            onKeyPress={event => {
+                                if (event.key === "Enter") {
+                                    navigate("/");
+                                }
                             }}
                             inputProps={{'aria-label': 'search'}}
                         />

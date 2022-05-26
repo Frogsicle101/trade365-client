@@ -10,7 +10,6 @@ import {
 import React from "react";
 import axios from "../config/axiosConfig";
 import {FileUpload} from "../components/FileUpload";
-import {useUserStore} from "../store";
 
 
 
@@ -44,9 +43,6 @@ const uploadImage = (userId: number, imageFile: File) => {
 
 
 const Registration = () => {
-
-    const user = useUserStore(state => state.user);
-    const setUser = useUserStore(state => state.setUser);
 
     const initialImageSource = "https://upload.wikimedia.org/wikipedia/commons/2/2c/Default_pfp.svg";
 

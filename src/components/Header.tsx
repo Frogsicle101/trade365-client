@@ -1,4 +1,4 @@
-import {alpha, AppBar, Avatar, InputBase, styled, TextField, Toolbar, Typography} from "@mui/material";
+import {alpha, AppBar, Avatar, Box, Button, InputBase, styled, TextField, Toolbar, Typography} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
 import {useSearchStore} from "../store";
@@ -55,10 +55,13 @@ const Header = () => {
         <div>
             <AppBar position="static" sx={{marginBottom: "1rem"}}>
                 <Toolbar>
+                    <Box flexGrow={1}>
+                        <Button onClick={() => navigate("/")} color="inherit" sx={{float: "left"}}>
+                            Trade365
+                        </Button>
+                    </Box>
 
-                    <Typography variant="h5" sx={{textAlign: "left", flexGrow: "1"}}>
-                        Trade365
-                    </Typography>
+
 
                     <Search>
                         <SearchIconWrapper>

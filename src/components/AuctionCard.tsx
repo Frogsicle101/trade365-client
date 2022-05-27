@@ -5,7 +5,7 @@ import {rootUrl} from "../config/root";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
-const computeClosingTime = (endDateString: string) => {
+export const computeClosingTime = (endDateString: string) => {
     let now = new Date();
     let endDate = new Date(endDateString);
 
@@ -33,8 +33,8 @@ const AuctionCard = (props: any) => {
 
     const [imgSource, setImgSource] = React.useState(rootUrl + "auctions/" + item.auctionId + "/image");
 
-
     const sellerName = item.sellerFirstName + " " + item.sellerLastName;
+
 
     const bidPrice = item.highestBid !== null ? "$" + item.highestBid: "No bids";
     const reserve = "Reserve: $" + item.reserve + " (" + ((item.reserve > item.highestBid) ? "unmet" : "met") + ")";

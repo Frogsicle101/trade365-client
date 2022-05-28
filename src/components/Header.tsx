@@ -1,7 +1,49 @@
-import {alpha, AppBar, Avatar, Box, Button, InputBase, styled, TextField, Toolbar, Typography} from "@mui/material";
+import {
+    alpha,
+    AppBar,
+    Avatar,
+    Box,
+    Button,
+    Dialog,
+    InputBase, Menu,
+    MenuItem,
+    styled, Tab, Tabs,
+    Toolbar
+} from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
-import {useSearchStore} from "../store";
+import {useSearchStore, useUserStore} from "../store";
+import React from "react";
+import Registration from "./Registration";
+import Login from "./Login";
+import {logout} from "../utils/userUtils";
+import {rootUrl} from "../config/root";
+
+interface TabPanelProps {
+    children?: React.ReactNode;
+    index: number;
+    value: number;
+}
+
+const TabPanel = (props: TabPanelProps) => {
+    const { children, value, index, ...other } = props;
+
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{ p: 3 }}>
+                    {children}
+                </Box>
+            )}
+        </div>
+    );
+}
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -48,8 +90,33 @@ const Header = () => {
     const searchText = useSearchStore(state => state.searchText);
     const setSearchText = useSearchStore(state => state.setSearchText);
 
-    let imageSource = "";
+    const user = useUserStore(state => state.user);
+
+    const [openLogin, setOpenLogin] = React.useState(false);
+    const [tabIndex, setTabIndex] = React.useState(0);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
     const navigate = useNavigate();
+
+    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const userArea = () => {
+        if (user === null) {
+            return (
+                <Button color="inherit" onClick={()=>setOpenLogin(true)}>Login / Register</Button>
+            )
+        } else {
+            return (
+                <Avatar src={rootUrl + "users/" + user.userId + "/image"} onClick={handleMenu}/>
+            )
+        }
+    }
 
     return (
         <div>
@@ -82,12 +149,48 @@ const Header = () => {
                         />
                     </Search>
 
+                    {userArea()}
 
-
-                    <Avatar src={imageSource}/>
                 </Toolbar>
 
             </AppBar>
+
+            <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={() => {
+                    navigate("/profile");
+                    handleClose();
+                }}>My Account</MenuItem>
+                <MenuItem onClick={() => {
+                    logout().then(handleClose)
+                }}>Logout</MenuItem>
+            </Menu>
+
+            <Dialog open={openLogin} onClose={()=>setOpenLogin(false)}>
+                <Tabs value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
+                    <Tab label="Login"/>
+                    <Tab label="Register"/>
+                </Tabs>
+                <TabPanel value={tabIndex} index={0}>
+                    <Login setDialogOpen={setOpenLogin}/>
+                </TabPanel>
+                <TabPanel value={tabIndex} index={1}>
+                    <Registration setDialogOpen={setOpenLogin}/>
+                </TabPanel>
+            </Dialog>
         </div>
 
     )

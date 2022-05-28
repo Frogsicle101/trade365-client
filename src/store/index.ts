@@ -1,17 +1,18 @@
 import create from 'zustand';
+import {persist} from "zustand/middleware";
 
 
 interface UserState {
     user: User | null;
-    setUser: (user: User) => void;
+    setUser: (user: User | null) => void;
 }
 
-const useStore = create<UserState>((set) => ({
+const useUserStore = create(persist<UserState>((set) => ({
     user: null,
-    setUser: (user: User) => set(() => {
+    setUser: (user: User | null) => set(() => {
         return {user: user}
     }),
-}))
+})));
 
 interface SearchState {
     searchText: string | null;
@@ -25,4 +26,4 @@ const useSearchStore = create<SearchState>((set) => ({
     }),
 }))
 
-export {useSearchStore};
+export {useUserStore, useSearchStore};

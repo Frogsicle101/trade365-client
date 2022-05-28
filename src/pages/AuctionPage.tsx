@@ -1,12 +1,14 @@
 import {useParams} from "react-router-dom";
 import Header from "../components/Header";
-import {Avatar, Box, Card, Chip, Container, Link, Skeleton, Stack, Typography} from "@mui/material";
+import {Box, Card, Chip, Container, Link, Typography} from "@mui/material";
 import axios from "../config/axiosConfig";
 import React from "react";
 import ErrorMessage from "../components/ErrorMessage";
-import AuctionCard, {computeClosingTime} from "../components/AuctionCard";
+import {computeClosingTime} from "../components/AuctionCard";
 import {rootUrl} from "../config/root";
 import SimilarAuctions from "../components/SimilarAuctions";
+import Bids from "../components/Bids";
+import User from "../components/User";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
@@ -86,12 +88,11 @@ const AuctionPage = (props: any) => {
 
 
                                         <Box flex={1}>
-                                            <Stack direction="row" sx={{justifyContent: "center"}}>
-                                                <p>{sellerName}</p>
-                                                <Avatar src={rootUrl + "users/" + auction.sellerId + "/image"} sx={{margin: "5px"}}>
-                                                    {auction.sellerFirstName[0] + auction.sellerLastName[0]}
-                                                </Avatar>
-                                            </Stack>
+                                            <User
+                                                firstName={auction.sellerFirstName}
+                                                lastName={auction.sellerLastName}
+                                                id={auction.sellerId}
+                                            />
                                         </Box>
                                     </Box>
 
@@ -101,7 +102,7 @@ const AuctionPage = (props: any) => {
                                     <div style={{flex: "1"}}>{computeClosingTime(auction.endDate)}</div>
                                     <Chip
                                         label={categories[auction.categoryId]} sx={{margin: "1rem"}}
-                                        onClick={event => {
+                                        onClick={() => {
                                             props.setSelectedCategories([auction.categoryId]);
                                         }}
                                     />
@@ -117,9 +118,12 @@ const AuctionPage = (props: any) => {
                         <img src={imgSource} style={{height: "25rem", objectFit: "contain"
                         }} onError={() => {
                             setImgSource(FALLBACK_IMAGE);
-                        }}/>
+                        }} alt=""/>
                     </Box>
                 </Card>
+
+                <Bids auction={auction}/>
+
                 <SimilarAuctions categoryId={auction.categoryId} sellerId={auction.sellerId} sellerName={sellerName}/>
 
             </div>

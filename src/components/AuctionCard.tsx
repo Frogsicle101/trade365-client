@@ -1,4 +1,4 @@
-import {Avatar, Box, Card, Chip, Pagination, Stack, Typography, Link} from "@mui/material";
+import {Avatar, Box, Card, Chip, Stack, Typography, Link} from "@mui/material";
 import React from "react";
 import {rootUrl} from "../config/root";
 //import {Link} from "react-router-dom";
@@ -45,7 +45,7 @@ const AuctionCard = (props: any) => {
             justifyContent="center"
             alignItems="center"
         >
-            <Card sx={{height: cardHeight, maxWidth: "600px", flex: 1}}>
+            <Card sx={{height: cardHeight, width: "400px", flex: 1}}>
                 <div style={{display: "flex"}}>
                     <div style={{flex: "1", display: "flex", flexDirection:"column"}}>
 
@@ -69,7 +69,7 @@ const AuctionCard = (props: any) => {
                         <div style={{flex: "1"}}>{computeClosingTime(item.endDate)}</div>
                         <Chip
                             label={categories[item.categoryId]} sx={{margin: "1rem"}}
-                            onClick={event => {
+                            onClick={() => {
                                 props.setSelectedCategories([item.categoryId]);
                             }}
                         />
@@ -83,7 +83,7 @@ const AuctionCard = (props: any) => {
                             }} onError={() => {
                                 setImgSource(FALLBACK_IMAGE);
                             }}
-                            />
+                            alt=""/>
 
                             <Typography variant="subtitle1" style={{
                                 position: "absolute", bottom: "1rem", right: "1rem",

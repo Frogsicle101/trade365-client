@@ -4,6 +4,7 @@ import React from "react";
 import ErrorMessage from "./ErrorMessage";
 import User from "./User";
 import dayjs from "dayjs";
+import {useInterval} from "../hooks/useInterval";
 
 const Bids = (props: any) => {
 
@@ -11,9 +12,14 @@ const Bids = (props: any) => {
     const [errorMessage, setErrorMessage] = React.useState("");
     const [bids, setBids] = React.useState<Bid[]>([]);
 
+
+    useInterval(() => {
+        getBids();
+    }, 10000);
+
     React.useEffect(() => {
         getBids();
-    }, []);
+    }, [props.numBids]);
 
 
     const getBids = () => {
@@ -31,12 +37,12 @@ const Bids = (props: any) => {
 
     const listOfBids = () => {
         return bids.map((item, index) => (
-            <TableRow sx={index === 0?{fontSize: "large"}:{fontSize: "small"}}>
+            <TableRow key={item.timestamp} sx={index === 0?{fontSize: "large"}:{fontSize: "small"}}>
                 <TableCell>
                     <User firstName={item.firstName} lastName={item.lastName} id={item.bidderId}/>
                 </TableCell>
                 <TableCell>{dayjs(item.timestamp).format('hh:mm a DD/MM/YYYY')}</TableCell>
-                <TableCell>{item.amount}</TableCell>
+                <TableCell>{"$" + item.amount}</TableCell>
             </TableRow>
         ))
     }

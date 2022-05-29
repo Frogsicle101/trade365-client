@@ -14,16 +14,23 @@ const useUserStore = create(persist<UserState>((set) => ({
     }),
 })));
 
-interface SearchState {
+interface HeaderState {
     searchText: string | null;
     setSearchText: (text: string) => void;
+    loginOpen: boolean;
+    setLoginOpen: (bool: boolean) => void;
 }
 
-const useSearchStore = create<SearchState>((set) => ({
+const useHeaderStore = create<HeaderState>((set) => ({
     searchText: "",
     setSearchText: (text: string) => set(() => {
         return {searchText: text}
     }),
+    loginOpen: false,
+    setLoginOpen: (bool: boolean) => set(() => {
+        return {loginOpen: bool}
+    }),
+
 }))
 
-export {useUserStore, useSearchStore};
+export {useUserStore, useHeaderStore};

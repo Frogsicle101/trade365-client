@@ -19,7 +19,7 @@ import axios from "../config/axiosConfig";
 import ErrorMessage from "../components/ErrorMessage";
 import AuctionCard from "../components/AuctionCard";
 import qs from "qs";
-import {useSearchStore} from "../store";
+import {useHeaderStore} from "../store";
 
 const ITEMS_PER_PAGE = 6;
 
@@ -159,8 +159,8 @@ const Auctions = () => {
     const [errorFlag, setErrorFlag] = React.useState(false)
     const [errorMessage, setErrorMessage] = React.useState("")
 
-    const searchText = useSearchStore(state => state.searchText);
-    const setSearchText = useSearchStore(state => state.setSearchText);
+    const searchText = useHeaderStore(state => state.searchText);
+    const setSearchText = useHeaderStore(state => state.setSearchText);
 
     const [selectedCategories, setSelectedCategories] = React.useState([]);
 

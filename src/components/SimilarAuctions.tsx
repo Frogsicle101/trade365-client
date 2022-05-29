@@ -75,7 +75,7 @@ const SimilarAuctions = (props: any) => {
         return (
             <Stack direction="row" spacing={2} sx={{marginY: 2, width: "100%", overflow: "auto"}}>
                 {auctions.map(item => (
-                    <AuctionCard item={item} cardHeight="15rem" categories={categories}
+                    <AuctionCard key={item.auctionId} item={item} cardHeight="15rem" categories={categories}
                                  setSelectedCategories={()=>{}}/>
                 ))}
             </Stack>

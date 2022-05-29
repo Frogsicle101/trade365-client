@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import Header from "../components/Header";
-import {Box, Card, Chip, Container, Link, Typography} from "@mui/material";
+import {Box, Button, Card, Chip, Container, Link, Tooltip, Typography} from "@mui/material";
 import axios from "../config/axiosConfig";
 import React from "react";
 import ErrorMessage from "../components/ErrorMessage";
@@ -9,6 +9,10 @@ import {rootUrl} from "../config/root";
 import SimilarAuctions from "../components/SimilarAuctions";
 import Bids from "../components/Bids";
 import User from "../components/User";
+import {isClosed} from "../utils/auctionUtils";
+import {useHeaderStore, useUserStore} from "../store";
+import BidButton from "../components/BidButton";
+import {useInterval} from "../hooks/useInterval";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
@@ -23,10 +27,23 @@ const AuctionPage = (props: any) => {
 
     const [imgSource, setImgSource] = React.useState(FALLBACK_IMAGE);
 
+    const [numBids, setNumBids] = React.useState(0);
+
+    const setLoginOpen = useHeaderStore(state => state.setLoginOpen);
+    const user = useUserStore(state => state.user);
+
+    useInterval(() => {
+        getAuction();
+    }, 10000)
+
     React.useEffect(() => {
         getAuction();
         getCategories();
     }, []);
+
+    React.useEffect(() => {
+        getAuction();
+    }, [numBids]);
 
     const getAuction = () => {
         axios.get("auctions/" + id)
@@ -57,13 +74,17 @@ const AuctionPage = (props: any) => {
                 setErrorMessage(error.toString())
             })
     }
-    
+
+
     let innerContent;
 
     if (auction) {
         const sellerName = auction.sellerFirstName + " " + auction.sellerLastName;
         const bidPrice = auction.highestBid !== null ? "$" + auction.highestBid: "No bids";
         const reserve = "Reserve: $" + auction.reserve + " (" + ((auction.reserve > auction.highestBid) ? "unmet" : "met") + ")";
+
+        const auctionClosed = isClosed(auction);
+
 
         innerContent = (
             <div>
@@ -109,8 +130,14 @@ const AuctionPage = (props: any) => {
                                     <Typography variant="body1" sx={{paddingX: 5}}>
                                         {auction.description}
                                     </Typography>
-                                    
 
+                                    <BidButton
+                                        auctionClosed={auctionClosed}
+                                        auction={auction}
+                                        noUserCallback={() => setLoginOpen(true)}
+                                        highestBid={auction.highestBid}
+                                        callback={() => setNumBids((state) => state + 1)}
+                                    />
                                 </div>
                             </div>
                         </Box>
@@ -122,7 +149,7 @@ const AuctionPage = (props: any) => {
                     </Box>
                 </Card>
 
-                <Bids auction={auction}/>
+                <Bids auction={auction} numBids={numBids}/>
 
                 <SimilarAuctions categoryId={auction.categoryId} sellerId={auction.sellerId} sellerName={sellerName}/>
 

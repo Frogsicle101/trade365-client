@@ -2,6 +2,7 @@ import {Button, DialogActions, DialogContent, DialogTitle, Stack, TextField} fro
 import React from "react";
 import {useUserStore} from "../store";
 import axios from "../config/axiosConfig";
+import ErrorMessage from "./ErrorMessage";
 
 export const logIn = (email: string, password: string, callback: (() => Promise<void>) | (() => void)) => {
     const setUser = useUserStore.getState().setUser;
@@ -38,6 +39,9 @@ const Login = (props: any) => {
     const [email, setEmail] = React.useState("");
     const [password, setPassword] = React.useState("");
 
+    const [errorFlag, setErrorFlag] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
+
     const handleClose = () => {
         props.setDialogOpen(false);
     }
@@ -51,6 +55,7 @@ const Login = (props: any) => {
     return (
         <div>
             <DialogTitle>Login</DialogTitle>
+            <ErrorMessage flag={errorFlag} message={errorMessage}/>
             <form onSubmit={loginHandler}>
                 <DialogContent>
                     <Stack alignItems="center">

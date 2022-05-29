@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import {useNavigate} from "react-router-dom";
-import {useSearchStore, useUserStore} from "../store";
+import {useHeaderStore, useUserStore} from "../store";
 import React from "react";
 import Registration from "./Registration";
 import Login from "./Login";
@@ -85,14 +85,16 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
-const Header = () => {
+const Header = (props: any) => {
 
-    const searchText = useSearchStore(state => state.searchText);
-    const setSearchText = useSearchStore(state => state.setSearchText);
+    const searchText = useHeaderStore(state => state.searchText);
+    const setSearchText = useHeaderStore(state => state.setSearchText);
+
+    const loginOpen = useHeaderStore(state => state.loginOpen);
+    const setLoginOpen = useHeaderStore(state => state.setLoginOpen);
 
     const user = useUserStore(state => state.user);
 
-    const [openLogin, setOpenLogin] = React.useState(false);
     const [tabIndex, setTabIndex] = React.useState(0);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -109,7 +111,7 @@ const Header = () => {
     const userArea = () => {
         if (user === null) {
             return (
-                <Button color="inherit" onClick={()=>setOpenLogin(true)}>Login / Register</Button>
+                <Button color="inherit" onClick={()=>setLoginOpen(true)}>Login / Register</Button>
             )
         } else {
             return (
@@ -175,20 +177,20 @@ const Header = () => {
                     handleClose();
                 }}>My Account</MenuItem>
                 <MenuItem onClick={() => {
-                    logout().then(handleClose)
+                    logout().then(() => {handleClose(); navigate("/")})
                 }}>Logout</MenuItem>
             </Menu>
 
-            <Dialog open={openLogin} onClose={()=>setOpenLogin(false)}>
+            <Dialog open={loginOpen} onClose={()=>setLoginOpen(false)}>
                 <Tabs value={tabIndex} onChange={(event, value) => setTabIndex(value)}>
                     <Tab label="Login"/>
                     <Tab label="Register"/>
                 </Tabs>
                 <TabPanel value={tabIndex} index={0}>
-                    <Login setDialogOpen={setOpenLogin}/>
+                    <Login setDialogOpen={setLoginOpen}/>
                 </TabPanel>
                 <TabPanel value={tabIndex} index={1}>
-                    <Registration setDialogOpen={setOpenLogin}/>
+                    <Registration setDialogOpen={setLoginOpen}/>
                 </TabPanel>
             </Dialog>
         </div>

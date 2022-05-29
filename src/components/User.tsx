@@ -7,7 +7,7 @@ const User = (props: any) => {
     return (
         <Stack direction="row" sx={{justifyContent: "center"}}>
             <p>{props.firstName + " " + props.lastName}</p>
-            <Avatar src={rootUrl + "users/" + props.Id + "/image"} sx={{margin: "5px"}}>
+            <Avatar src={rootUrl + "users/" + props.id + "/image"} sx={{margin: "5px"}}>
                 {props.firstName[0] + props.lastName[0]}
             </Avatar>
         </Stack>

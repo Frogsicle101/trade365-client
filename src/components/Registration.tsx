@@ -9,20 +9,11 @@ import React from "react";
 import axios from "../config/axiosConfig";
 import {FileUpload} from "./FileUpload";
 import {logIn} from "./Login";
+import {uploadImage} from "./ChangeProfilePhoto";
 
 
 
-const uploadImage = (userId: number, imageFile: File) => {
 
-    return new Promise<void>(resolve => {
-        axios.put("users/" + userId + "/image", imageFile, {
-            headers: {
-                'Content-Type': imageFile.type
-            }
-        }).then(() => resolve())
-
-    })
-}
 
 
 const Registration = (props: any) => {
@@ -47,7 +38,6 @@ const Registration = (props: any) => {
 
         event.preventDefault();
 
-
         axios.post(
             "users/register",
             {
@@ -61,19 +51,13 @@ const Registration = (props: any) => {
                         if (imageFile) {
                             return uploadImage(response.data.userId, imageFile).then(handleClose);
                         }
-
                     });
-
-
-                },
-
-                error => {
+                }, error => {
                     if (error.response && error.response.status === 403) {
                         setErrorMessage("That email is already in use!");
                     } else {
                         setErrorMessage(error.toString());
                     }
-
                     setErrorFlag(true);
                 });
     }

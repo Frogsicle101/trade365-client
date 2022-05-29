@@ -1,7 +1,23 @@
-import {Avatar, Box, Card, Chip, Stack, Typography, Link} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Card,
+    Chip,
+    Stack,
+    Typography,
+    Link,
+    Button,
+    Tooltip,
+    Dialog,
+    DialogTitle,
+    DialogContent, DialogContentText, DialogActions
+} from "@mui/material";
 import React from "react";
 import {rootUrl} from "../config/root";
-//import {Link} from "react-router-dom";
+import {useUserStore} from "../store";
+import axios from "../config/axiosConfig";
+import EditAuction from "./EditAuction";
+import dayjs from "dayjs";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
@@ -26,18 +42,116 @@ export const computeClosingTime = (endDateString: string) => {
 
 const AuctionCard = (props: any) => {
 
-
     const item = props.item;
     const cardHeight = props.cardHeight;
     const categories = props.categories;
 
     const [imgSource, setImgSource] = React.useState(rootUrl + "auctions/" + item.auctionId + "/image");
+    const user = useUserStore(state => state.user);
+
+    const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+    const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+    const [description, setDescription] = React.useState("");
 
     const sellerName = item.sellerFirstName + " " + item.sellerLastName;
 
 
     const bidPrice = item.highestBid !== null ? "$" + item.highestBid: "No bids";
     const reserve = "Reserve: $" + item.reserve + " (" + ((item.reserve > item.highestBid) ? "unmet" : "met") + ")";
+
+    React.useEffect(() => {
+        getAuction();
+    }, [])
+
+    const handleEdit = (
+        title: string, category: number,
+        reserve: number | string, endDate: Date,
+        description: string, imageFile: any) => {
+
+        const stringDay = dayjs(endDate).format("YYYY-MM-DD HH:mm:ss.SSS")
+        axios.patch("auctions/" + item.auctionId, {
+            title: title,
+            description: description,
+            categoryId: category,
+            endDate: stringDay,
+            reserve: reserve !== "" ? reserve : 1
+        }).then((response) => {
+            if (imageFile) {
+                axios.put("auctions/" + item.auctionId + "/image", imageFile, {
+                    headers: {
+                        'Content-Type': imageFile.type
+                    }}).then(props.updateCallback)
+            } else {
+                props.updateCallback();
+            }
+
+        })
+    }
+
+
+    const getAuction = () => {
+        axios.get("auctions/" + item.auctionId)
+            .then((response) => {
+                setDescription(response.data.description)
+            })
+    }
+
+    const deleteAuction = () => {
+        axios.delete("auctions/" + item.auctionId).then(() => {
+            props.updateCallback();
+            setDeleteDialogOpen(false);
+
+        })
+    }
+
+    const sellerButtons = () => {
+        if (user && user.userId === item.sellerId) {
+            return (
+                <div>
+                    <Tooltip title={!item.highestBid ? "" : "You cannot edit this auction because it has been bid on"} arrow>
+                        <div>
+                            <Button disabled={item.highestBid} onClick={() => setEditDialogOpen(true)}>
+                                Edit
+                            </Button>
+                            <Button disabled={item.highestBid} onClick={() => setDeleteDialogOpen(true)}>
+                                Delete
+                            </Button>
+                        </div>
+                    </Tooltip>
+                    <Dialog open={deleteDialogOpen} onClose={() => setDeleteDialogOpen(false)}>
+                        <DialogTitle>Delete Event</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Are you sure you want to delete {item.title}?
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button variant="outlined" onClick={() => setDeleteDialogOpen(false)}>
+                                Cancel
+                            </Button>
+                            <Button variant="contained" onClick={deleteAuction}>
+                                Delete
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+                    <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
+                        <EditAuction
+                            title="Edit Auction"
+                            setDialogOpen={setEditDialogOpen}
+                            auction={item}
+                            description={description}
+                            hasImage={true}
+                            hideReserve={true}
+
+                            submitCallback={handleEdit}
+                        />
+                    </Dialog>
+
+                </div>
+            )
+        }
+    }
+
 
     return (
         <Box
@@ -67,12 +181,14 @@ const AuctionCard = (props: any) => {
 
 
                         <div style={{flex: "1"}}>{computeClosingTime(item.endDate)}</div>
+                        {sellerButtons()}
                         <Chip
                             label={categories[item.categoryId]} sx={{margin: "1rem"}}
                             onClick={() => {
                                 props.setSelectedCategories([item.categoryId]);
                             }}
                         />
+
 
 
                     </div>

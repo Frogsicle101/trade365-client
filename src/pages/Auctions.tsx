@@ -114,17 +114,6 @@ const calculateTimeTo = (endDateString: string) => {
     return endDate.getTime() - now.getTime();
 }
 
-const filterAuctionStatus = (auctions: Auction[], state: string) => {
-    if (state === "Open") {
-        return auctions.filter(auction => calculateTimeTo(auction.endDate) > 0)
-    } else if (state === "Closed") {
-        return auctions.filter(auction => calculateTimeTo(auction.endDate) <= 0)
-    } else {
-        return auctions;
-    }
-
-}
-
 
 const statusTextToParam = (text: string) => {
     const statuses: {[key: string]: string} = {
@@ -156,11 +145,10 @@ const Auctions = () => {
     const [categories, setCategories] = React.useState<{[key:number]: string}>({})
     const [categoryList, setCategoryList] = React.useState<number[]>([]);
 
-    const [errorFlag, setErrorFlag] = React.useState(false)
-    const [errorMessage, setErrorMessage] = React.useState("")
+    const [errorFlag, setErrorFlag] = React.useState(false);
+    const [errorMessage, setErrorMessage] = React.useState("");
 
     const searchText = useHeaderStore(state => state.searchText);
-    const setSearchText = useHeaderStore(state => state.setSearchText);
 
     const [selectedCategories, setSelectedCategories] = React.useState([]);
 
@@ -170,10 +158,12 @@ const Auctions = () => {
     const [numPages, setNumPages] = React.useState(1);
     const [page, setPage] = React.useState(1);
 
+    const [state, setState] = React.useState(0);
+
     React.useEffect(() => {
         getAuctions();
         getCategories();
-    }, [selectedCategories, searchText, status, sort, page])
+    }, [selectedCategories, searchText, status, sort, page, state])
 
     const getAuctions = () => {
         axios.get("auctions", {
@@ -225,7 +215,7 @@ const Auctions = () => {
             return (
                 <Grid item xs={12} xl={6} key={item.auctionId}>
                     <AuctionCard item={item} cardHeight={cardHeight} categories={categories}
-                    setSelectedCategories={setSelectedCategories}/>
+                    setSelectedCategories={setSelectedCategories} updateCallback={() => setState(state => state + 1)}/>
                 </Grid>
             )
         }

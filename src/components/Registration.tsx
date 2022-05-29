@@ -1,7 +1,11 @@
 import {
     Alert,
     AlertTitle,
-    Button, DialogActions, DialogContent, DialogTitle, Grid,
+    Button,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Grid,
     Stack,
     TextField
 } from "@mui/material";
@@ -10,11 +14,6 @@ import axios from "../config/axiosConfig";
 import {FileUpload} from "./FileUpload";
 import {logIn} from "./Login";
 import {uploadImage} from "./ChangeProfilePhoto";
-
-
-
-
-
 
 const Registration = (props: any) => {
 
@@ -51,7 +50,7 @@ const Registration = (props: any) => {
                         if (imageFile) {
                             return uploadImage(response.data.userId, imageFile).then(handleClose);
                         }
-                    });
+                    }, setErrorMessage, setErrorFlag);
                 }, error => {
                     if (error.response && error.response.status === 403) {
                         setErrorMessage("That email is already in use!");

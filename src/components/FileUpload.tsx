@@ -23,7 +23,7 @@ const FileUpload = (props: any) => {
 
     return (
         <div>
-            <img src={props.imageSource} width="100%" alt="Profile image preview"/>
+            <img src={props.imageSource} width={200} style={{objectFit: "contain"}} alt="Upload Preview"/>
 
             <input className="mt-1" type="file" accept="image/jpeg, image/png, image/gif" onChange={
                handleFileUpload

@@ -57,7 +57,7 @@ const ChangeProfilePhoto = (props: any) => {
                         variant="contained"
                         color="primary"
                     >
-                        Register
+                        Submit
                     </Button>
                 </DialogActions>
             </form>

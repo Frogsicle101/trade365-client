@@ -7,6 +7,9 @@ import {rootUrl} from "../config/root";
 import ErrorMessage from "../components/ErrorMessage";
 import UpdateAccount from "../components/UpdateAccount";
 import ChangeProfilePhoto from "../components/ChangeProfilePhoto";
+import MyAuctions from "../components/MyAuctions";
+import Heading from "../components/Heading";
+import dayjs from "dayjs";
 
 const UserPage = () => {
 
@@ -85,6 +88,8 @@ const UserPage = () => {
         setPhotoDialogOpen(false);
     }
 
+
+
     let innerContent;
 
     if (user && fullUser) {
@@ -93,6 +98,7 @@ const UserPage = () => {
 
         innerContent = (
             <div>
+                <Heading>Profile</Heading>
                 <Card sx={{padding: "10px"}}>
                     <Stack direction="row" justifyContent="space-evenly" alignItems="center">
                         <Stack justifyContent="space-evenly" spacing={2}>
@@ -133,6 +139,8 @@ const UserPage = () => {
                     <ChangeProfilePhoto setDialogOpen={setPhotoDialogOpen}
                                         updateCallback={()=>setState(state => state + 1)}/>
                 </Dialog>
+
+                <MyAuctions user={user}/>
 
             </div>
         )

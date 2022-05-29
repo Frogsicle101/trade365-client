@@ -4,13 +4,22 @@ import {useUserStore} from "../store";
 import axios from "../config/axiosConfig";
 import ErrorMessage from "./ErrorMessage";
 
-export const logIn = (email: string, password: string, callback: (() => Promise<void>) | (() => void)) => {
+
+export const logIn = (
+    email: string, password: string,
+    callback: (() => Promise<void>) | (() => void),
+    setErrorMessage: ((message: string) => void),
+    setErrorFlag: ((flag: boolean) => void)
+) => {
     const setUser = useUserStore.getState().setUser;
 
     axios.post("users/login", {
         email: email,
         password: password
     }).then(response => {
+
+        setErrorMessage("");
+        setErrorFlag(false);
 
         axios.defaults.headers.common['X-Authorization'] = response.data.token;
 
@@ -29,6 +38,15 @@ export const logIn = (email: string, password: string, callback: (() => Promise<
             });
         }
 
+
+    }, error => {
+        if (error.response && error.response.status === 400) {
+            setErrorMessage(error.response.statusText);
+            setErrorFlag(true);
+        }  else {
+            setErrorMessage(error.toString());
+            setErrorFlag(true);
+        }
 
     });
 }
@@ -49,7 +67,7 @@ const Login = (props: any) => {
     const loginHandler = (event: any) => {
         event.preventDefault();
 
-        logIn(email, password, handleClose);
+        logIn(email, password, handleClose, setErrorMessage, setErrorFlag);
     }
 
     return (

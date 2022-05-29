@@ -15,11 +15,13 @@ const SimilarAuctions = (props: any) => {
     const [sameCategoryAuctions, setSameCategoryAuctions] = React.useState<Auction[]>([]);
     const [sameSellerAuctions, setSameSellerAuctions] = React.useState<Auction[]>([]);
 
+    const [state, setState] = React.useState(0);
+
 
     React.useEffect(() => {
         getAuctions([props.categoryId], props.sellerId);
         getCategories();
-    }, []);
+    }, [state]);
 
 
     const getCategories = () => {
@@ -76,7 +78,9 @@ const SimilarAuctions = (props: any) => {
             <Stack direction="row" spacing={2} sx={{marginY: 2, width: "100%", overflow: "auto"}}>
                 {auctions.map(item => (
                     <AuctionCard key={item.auctionId} item={item} cardHeight="15rem" categories={categories}
-                                 setSelectedCategories={()=>{}}/>
+                                 setSelectedCategories={()=>{}}
+                                 updateCallback={() => setState(state => state + 1)}
+                    />
                 ))}
             </Stack>
         )

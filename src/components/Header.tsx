@@ -5,9 +5,12 @@ import {
     Box,
     Button,
     Dialog,
-    InputBase, Menu,
+    InputBase,
+    Menu,
     MenuItem,
-    styled, Tab, Tabs,
+    styled,
+    Tab,
+    Tabs,
     Toolbar
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';

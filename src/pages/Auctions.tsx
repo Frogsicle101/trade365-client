@@ -1,24 +1,20 @@
 import Header from "../components/Header";
 import {
-    Avatar,
     Box,
     Card,
-    Chip,
-    Container, FormControl,
-    Grid, InputLabel,
+    Container,
+    FormControl,
+    Grid,
+    InputLabel,
     MenuItem,
-    OutlinedInput, Pagination,
-    Select,
-    Stack,
-    Typography
+    OutlinedInput,
+    Pagination,
+    Select
 } from "@mui/material";
-
-import FilterIcon from '@mui/icons-material/FilterAlt';
 import React from "react";
 import axios from "../config/axiosConfig";
 import ErrorMessage from "../components/ErrorMessage";
 import AuctionCard from "../components/AuctionCard";
-import qs from "qs";
 import {useHeaderStore} from "../store";
 
 const ITEMS_PER_PAGE = 6;

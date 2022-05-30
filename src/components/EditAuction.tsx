@@ -1,12 +1,15 @@
 import {
-    Alert,
-    AlertTitle, Box,
+    Box,
     Button,
     DialogActions,
     DialogContent,
-    DialogTitle, FormControl,
-    Grid, InputAdornment, InputLabel, MenuItem, Select,
-    Stack, TextareaAutosize,
+    DialogTitle,
+    FormControl,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Select,
+    Stack,
     TextField
 } from "@mui/material";
 import {FileUpload} from "./FileUpload";
@@ -14,8 +17,8 @@ import React from "react";
 import ErrorMessage from "./ErrorMessage";
 import dayjs from "dayjs";
 import axios from "../config/axiosConfig";
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {DateTimePicker} from "@mui/x-date-pickers";
 import {rootUrl} from "../config/root";
 

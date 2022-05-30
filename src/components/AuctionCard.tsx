@@ -1,16 +1,18 @@
 import {
     Avatar,
     Box,
+    Button,
     Card,
     Chip,
-    Stack,
-    Typography,
-    Link,
-    Button,
-    Tooltip,
     Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
     DialogTitle,
-    DialogContent, DialogContentText, DialogActions
+    Link,
+    Stack,
+    Tooltip,
+    Typography
 } from "@mui/material";
 import React from "react";
 import {rootUrl} from "../config/root";
@@ -59,9 +61,7 @@ const AuctionCard = (props: any) => {
     const bidPrice = item.highestBid !== null ? "$" + item.highestBid: "No bids";
     const reserve = "Reserve: $" + item.reserve + " (" + ((item.reserve > item.highestBid) ? "unmet" : "met") + ")";
 
-    React.useEffect(() => {
-        getAuction();
-    }, [])
+
 
     const handleEdit = (
         title: string, category: number,
@@ -151,6 +151,10 @@ const AuctionCard = (props: any) => {
             )
         }
     }
+
+    React.useEffect(() => {
+        getAuction();
+    }, [getAuction]);
 
 
     return (

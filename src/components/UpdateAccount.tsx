@@ -1,14 +1,6 @@
-import {
-    Alert,
-    AlertTitle,
-    Button, DialogActions, DialogContent, DialogTitle, Grid,
-    Stack,
-    TextField
-} from "@mui/material";
+import {Alert, AlertTitle, Button, DialogActions, DialogContent, DialogTitle, Stack, TextField} from "@mui/material";
 import React from "react";
 import axios from "../config/axiosConfig";
-import {FileUpload} from "./FileUpload";
-import {logIn} from "./Login";
 
 
 const UpdateAccount = (props: any) => {

@@ -17,10 +17,6 @@ const Bids = (props: any) => {
         getBids();
     }, 10000);
 
-    React.useEffect(() => {
-        getBids();
-    }, [props.numBids]);
-
 
     const getBids = () => {
         axios.get("auctions/" + props.auction.auctionId + "/bids")
@@ -46,6 +42,10 @@ const Bids = (props: any) => {
             </TableRow>
         ))
     }
+
+    React.useEffect(() => {
+        getBids();
+    }, [props.numBids, getBids]);
 
     if (bids.length > 0) {
         return (

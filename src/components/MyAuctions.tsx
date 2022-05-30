@@ -1,9 +1,8 @@
-import {Card, Dialog, Fab, Grid, Typography} from "@mui/material";
+import {Dialog, Fab, Grid, Typography} from "@mui/material";
 import Heading from "./Heading";
 import AuctionCard from "./AuctionCard";
 import React from "react";
 import axios from "../config/axiosConfig";
-import {useUserStore} from "../store";
 import ErrorMessage from "./ErrorMessage";
 import AddIcon from '@mui/icons-material/Add';
 import EditAuction from "./EditAuction";

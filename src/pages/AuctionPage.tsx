@@ -1,6 +1,6 @@
 import {useParams} from "react-router-dom";
 import Header from "../components/Header";
-import {Box, Button, Card, Chip, Container, Link, Tooltip, Typography} from "@mui/material";
+import {Box, Card, Chip, Container, Link, Typography} from "@mui/material";
 import axios from "../config/axiosConfig";
 import React from "react";
 import ErrorMessage from "../components/ErrorMessage";

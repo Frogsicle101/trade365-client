@@ -1,5 +1,5 @@
 import {useUserStore} from "../store";
-import {Avatar, Box, Button, Card, Container, Dialog, Link, Stack, Typography} from "@mui/material";
+import {Avatar, Button, Card, Container, Dialog, Stack, Typography} from "@mui/material";
 import React from "react";
 import Header from "../components/Header";
 import axios from "../config/axiosConfig";
@@ -9,7 +9,6 @@ import UpdateAccount from "../components/UpdateAccount";
 import ChangeProfilePhoto from "../components/ChangeProfilePhoto";
 import MyAuctions from "../components/MyAuctions";
 import Heading from "../components/Heading";
-import dayjs from "dayjs";
 
 const UserPage = () => {
 

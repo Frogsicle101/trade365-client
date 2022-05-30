@@ -93,7 +93,7 @@ const MyAuctions = (props: any) => {
             axios.put("auctions/" + response.data.auctionId + "/image", imageFile, {
                 headers: {
                     'Content-Type': imageFile.type
-                }}).then()
+                }}).then(() => setState(state => state + 1))
         })
     }
 

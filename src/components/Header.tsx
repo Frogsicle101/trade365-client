@@ -180,7 +180,8 @@ const Header = (props: any) => {
                     handleClose();
                 }}>My Account</MenuItem>
                 <MenuItem onClick={() => {
-                    logout().then(() => {handleClose(); navigate("/")})
+                    handleClose()
+                    logout().then(() => {navigate("/")})
                 }}>Logout</MenuItem>
             </Menu>
 

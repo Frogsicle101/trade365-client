@@ -49,6 +49,8 @@ const Registration = (props: any) => {
                     logIn(email, password, () => {
                         if (imageFile) {
                             return uploadImage(response.data.userId, imageFile).then(handleClose);
+                        } else {
+                            handleClose();
                         }
                     }, setErrorMessage, setErrorFlag);
                 }, error => {

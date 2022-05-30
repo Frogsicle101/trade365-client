@@ -13,6 +13,7 @@ import {isClosed} from "../utils/auctionUtils";
 import {useHeaderStore, useUserStore} from "../store";
 import BidButton from "../components/BidButton";
 import {useInterval} from "../hooks/useInterval";
+import Closing from "../components/Closing";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
@@ -92,7 +93,7 @@ const AuctionPage = (props: any) => {
                     <Box display="flex">
                         <Box display="flex" flexDirection="column" flexGrow={1}>
                             <div style={{display: "flex"}}>
-                                <div style={{flex: "1", display: "flex", flexDirection:"column"}}>
+                                <div style={{flex: 1, display: "flex", flexDirection:"column"}}>
 
                                     <Typography variant="h3" sx={{padding: 2}}>{auction.title}</Typography>
 
@@ -120,14 +121,14 @@ const AuctionPage = (props: any) => {
 
 
 
-                                    <div style={{flex: "1"}}>{computeClosingTime(auction.endDate)}</div>
+                                    <Closing endDate={auction.endDate}/>
                                     <Chip
                                         label={categories[auction.categoryId]} sx={{margin: "1rem"}}
                                         onClick={() => {
                                             props.setSelectedCategories([auction.categoryId]);
                                         }}
                                     />
-                                    <Typography variant="body1" sx={{paddingX: 5}}>
+                                    <Typography variant="body1" sx={{paddingX: 5, wordWrap: "break-word", maxWidth: 500}}>
                                         {auction.description}
                                     </Typography>
 

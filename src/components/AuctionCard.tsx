@@ -20,6 +20,7 @@ import {useUserStore} from "../store";
 import axios from "../config/axiosConfig";
 import EditAuction from "./EditAuction";
 import dayjs from "dayjs";
+import Closing from "./Closing";
 
 const FALLBACK_IMAGE = "noImg.svg"
 
@@ -184,7 +185,9 @@ const AuctionCard = (props: any) => {
 
 
 
-                        <div style={{flex: "1"}}>{computeClosingTime(item.endDate)}</div>
+
+                            <Closing endDate={item.endDate}/>
+
                         {sellerButtons()}
                         <Chip
                             label={categories[item.categoryId]} sx={{margin: "1rem"}}

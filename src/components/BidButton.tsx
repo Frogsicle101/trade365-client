@@ -87,8 +87,8 @@ const BidButton = (props: any) => {
     }
 
     return (
-        <div>
-            <Box margin="2rem">
+        <Box margin="2rem">
+            <Box>
                 <Tooltip title={toolTipText} arrow>
                     <div style={{float: "right"}}>
                         <Button
@@ -140,7 +140,7 @@ const BidButton = (props: any) => {
 
 
             </Dialog>
-        </div>
+        </Box>
 
     )
 }

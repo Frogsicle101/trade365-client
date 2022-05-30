@@ -29,9 +29,9 @@ const EditAuction = (props: any) => {
 
     const [categories, setCategories] = React.useState<{[key:number]: string}>({});
 
-    const [title, setTitle] = React.useState(props.auction.title || "");
-    const [category, setCategory] = React.useState<number | string>(props.auction.categoryId || "");
-    const [endDate, setEndDate] = React.useState<any>(props.auction.endDate || "");
+    const [title, setTitle] = React.useState(props.auction ? props.auction.title : "");
+    const [category, setCategory] = React.useState<number | string>(props.auction ? props.auction.categoryId : "");
+    const [endDate, setEndDate] = React.useState<any>(props.auction ? props.auction.endDate : "");
     const [description, setDescription] = React.useState(props.description || "");
     const [reserve, setReserve] = React.useState<number | string>("");
 
